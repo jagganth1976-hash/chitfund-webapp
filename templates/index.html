@@ -2,40 +2,52 @@
 <html>
 
 <head>
+
     <title>Chit Fund App</title>
 
     <style>
 
         body{
-            font-family: Arial;
+            font-family:Arial;
             background:#dff6ff;
+            text-align:center;
             padding:20px;
-        }
-
-        h1{
-            color:darkblue;
-        }
-
-        input{
-            padding:10px;
-            width:250px;
-            font-size:16px;
-        }
-
-        button{
-            padding:10px 20px;
-            font-size:16px;
-            background:blue;
-            color:white;
-            border:none;
-            border-radius:5px;
         }
 
         .box{
             background:white;
+            width:320px;
+            margin:auto;
             padding:20px;
-            margin-top:20px;
-            border-radius:10px;
+            border-radius:15px;
+        }
+
+        input{
+            width:90%;
+            padding:10px;
+            margin:10px;
+        }
+
+        button{
+            padding:10px 20px;
+            margin:10px;
+            border:none;
+            color:white;
+            font-weight:bold;
+            cursor:pointer;
+            border-radius:8px;
+        }
+
+        .green{
+            background:green;
+        }
+
+        .blue{
+            background:blue;
+        }
+
+        .orange{
+            background:orange;
         }
 
     </style>
@@ -46,48 +58,63 @@
 
     <h1>CHIT FUND MANAGEMENT</h1>
 
-    <form action="/search" method="POST">
-
-        <input
-            type="text"
-            name="name"
-            placeholder="Enter Member Name"
-            required
-        >
-
-        <button type="submit">
-            SEARCH
-        </button>
-
-    </form>
-
-    {% if member %}
-
     <div class="box">
 
-        <h2>Member Details</h2>
+        <h2>Add Member</h2>
 
-        <p><b>Name:</b> {{member.name}}</p>
+        <form action="/add" method="POST">
 
-        <p><b>Agent:</b> {{member.agent}}</p>
+            <input type="text"
+                   name="name"
+                   placeholder="Member Name"
+                   required>
 
-        <p><b>Phone:</b> {{member.phone}}</p>
+            <input type="text"
+                   name="phone"
+                   placeholder="Phone Number"
+                   required>
 
-        <p><b>Total Paid:</b> ₹{{member.paid}}</p>
+            <button class="green" type="submit">
+                ADD MEMBER
+            </button>
 
-        <p><b>Months Paid:</b> {{member.months_paid}}</p>
+        </form>
 
-        <p><b>Remaining Months:</b> {{member.remaining}}</p>
+        <hr>
 
-        <p><b>Took Chit:</b> {{member.took_chit}}</p>
+        <h2>Search Member</h2>
 
-        <p><b>Auction Month:</b> {{member.auction_month}}</p>
+        <form action="/search" method="POST">
 
-        <p><b>Winning Bid:</b> ₹{{member.bid}}</p>
+            <input type="text"
+                   name="name"
+                   placeholder="Enter Member Name"
+                   required>
+
+            <button class="blue" type="submit">
+                SEARCH
+            </button>
+
+        </form>
+
+        <hr>
+
+        <h2>Collect Payment</h2>
+
+        <form action="/collect" method="POST">
+
+            <input type="text"
+                   name="name"
+                   placeholder="Enter Member Name"
+                   required>
+
+            <button class="orange" type="submit">
+                COLLECT ₹2000
+            </button>
+
+        </form>
 
     </div>
-
-    {% endif %}
 
 </body>
 </html>
