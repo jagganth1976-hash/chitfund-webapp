@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Chit Fund App</title>
+
+    <style>
+
+        body{
+            font-family: Arial;
+            background:#dff6ff;
+            padding:20px;
+        }
+
+        h1{
+            color:darkblue;
+        }
+
+        input{
+            padding:10px;
+            width:250px;
+            font-size:16px;
+        }
+
+        button{
+            padding:10px 20px;
+            font-size:16px;
+            background:blue;
+            color:white;
+            border:none;
+            border-radius:5px;
+        }
+
+        .box{
+            background:white;
+            padding:20px;
+            margin-top:20px;
+            border-radius:10px;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <h1>CHIT FUND MANAGEMENT</h1>
+
+    <form action="/search" method="POST">
+
+        <input
+            type="text"
+            name="name"
+            placeholder="Enter Member Name"
+            required
+        >
+
+        <button type="submit">
+            SEARCH
+        </button>
+
+    </form>
+
+    {% if member %}
+
+    <div class="box">
+
+        <h2>Member Details</h2>
+
+        <p><b>Name:</b> {{member.name}}</p>
+
+        <p><b>Agent:</b> {{member.agent}}</p>
+
+        <p><b>Phone:</b> {{member.phone}}</p>
+
+        <p><b>Total Paid:</b> ₹{{member.paid}}</p>
+
+        <p><b>Months Paid:</b> {{member.months_paid}}</p>
+
+        <p><b>Remaining Months:</b> {{member.remaining}}</p>
+
+        <p><b>Took Chit:</b> {{member.took_chit}}</p>
+
+        <p><b>Auction Month:</b> {{member.auction_month}}</p>
+
+        <p><b>Winning Bid:</b> ₹{{member.bid}}</p>
+
+    </div>
+
+    {% endif %}
+
+</body>
+</html>
