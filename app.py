@@ -249,6 +249,51 @@ def collect_payment():
     except:
 
         return "Payment Error"
+    
+    # =========================
+# VIEW ALL MEMBERS
+# =========================
+
+@app.route("/members")
+def view_members():
+
+    cursor.execute("SELECT * FROM members")
+
+    members = cursor.fetchall()
+
+    output = """
+
+    <h1>ALL MEMBERS</h1>
+
+    """
+
+    for member in members:
+
+        output += f"""
+
+        <hr>
+
+        Name: {member[1]}<br><br>
+
+        Phone: {member[2]}<br><br>
+
+        Chits: {member[3]}<br><br>
+
+        Monthly Payment: ₹{member[4]}<br><br>
+
+        Total Amount: ₹{member[5]}<br><br>
+
+        Total Paid: ₹{member[6]}<br><br>
+
+        Months Paid: {member[7]}<br><br>
+
+        Remaining Months: {member[8]}<br><br>
+
+        Status: {member[9]}<br><br>
+
+        """
+
+    return output
 
 # =========================
 # RUN APP
