@@ -138,10 +138,53 @@ def login():
 
     <form method="POST">
 
-    <input type="password"
-           name="password"
-           placeholder="Enter Password"
-           required>
+    <div style="position:relative;">
+
+<input type="password"
+       id="password"
+       name="password"
+       placeholder="Enter Password"
+       required
+       style="width:90%;
+              padding:12px;
+              margin-top:15px;
+              border-radius:8px;
+              border:1px solid gray;">
+
+<button type="button"
+        onclick="togglePassword()"
+
+        style="position:absolute;
+               right:5px;
+               top:18px;
+               background:none;
+               border:none;
+               font-size:18px;
+               cursor:pointer;">
+
+👁️
+
+</button>
+
+</div>
+<script>
+
+function togglePassword(){
+
+    let passwordField =
+    document.getElementById("password");
+
+    if(passwordField.type === "password"){
+
+        passwordField.type = "text";
+
+    }else{
+
+        passwordField.type = "password";
+    }
+}
+
+</script>
 
     <button type="submit">
 
