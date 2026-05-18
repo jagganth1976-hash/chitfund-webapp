@@ -61,9 +61,10 @@ def add_member():
 
         chits = int(request.form["chits"])
 
+        # FINAL LOGIC
         monthly_payment = 2000 * chits
 
-        total_amount = 60000 * chits
+        total_amount = 60000
 
         cursor.execute("""
 
@@ -113,9 +114,9 @@ def add_member():
 
         """
 
-    except:
+    except Exception as e:
 
-        return "Error Adding Member"
+        return f"Error Adding Member: {e}"
 
 # =========================
 # SEARCH MEMBER
@@ -167,9 +168,9 @@ def search_member():
 
             return "Member Not Found"
 
-    except:
+    except Exception as e:
 
-        return "Search Error"
+        return f"Search Error: {e}"
 
 # =========================
 # COLLECT PAYMENT
@@ -234,6 +235,8 @@ def collect_payment():
 
             Member: {member[1]}<br><br>
 
+            Paid Chits: {paid_chits}<br><br>
+
             Amount Paid: ₹{amount_paid}<br><br>
 
             Total Paid: ₹{total_paid}<br><br>
@@ -246,12 +249,12 @@ def collect_payment():
 
             return "Member Not Found"
 
-    except:
+    except Exception as e:
 
-        return "Payment Error"
-    
-    # =========================
-# VIEW ALL MEMBERS
+        return f"Payment Error: {e}"
+
+# =========================
+# VIEW MEMBERS
 # =========================
 
 @app.route("/members")
@@ -277,7 +280,7 @@ def view_members():
 
         Phone: {member[2]}<br><br>
 
-        Chits: {member[3]}<br><br>
+        Number Of Chits: {member[3]}<br><br>
 
         Monthly Payment: ₹{member[4]}<br><br>
 
@@ -289,7 +292,7 @@ def view_members():
 
         Remaining Months: {member[8]}<br><br>
 
-        Status: {member[9]}<br><br>
+        Payment Status: {member[9]}<br><br>
 
         """
 
