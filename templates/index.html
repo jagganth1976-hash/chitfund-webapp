@@ -24,11 +24,16 @@
             text-align: center;
         }
 
+        h1{
+
+            color: darkblue;
+        }
+
         .box{
 
             background: white;
 
-            max-width: 400px;
+            max-width: 420px;
 
             margin: auto;
 
@@ -48,6 +53,10 @@
             margin-top: 10px;
 
             font-size: 16px;
+
+            border-radius: 8px;
+
+            border: 1px solid gray;
         }
 
         button{
@@ -86,11 +95,21 @@
             background: orange;
         }
 
+        .black{
+
+            background: black;
+        }
+
         hr{
 
             margin-top: 25px;
 
             margin-bottom: 25px;
+        }
+
+        a{
+
+            text-decoration: none;
         }
 
     </style>
@@ -102,6 +121,8 @@
     <h1>CHIT FUND MANAGEMENT</h1>
 
     <div class="box">
+
+        <!-- ADD MEMBER -->
 
         <h2>Add Member</h2>
 
@@ -132,6 +153,8 @@
 
         <hr>
 
+        <!-- SEARCH MEMBER -->
+
         <h2>Search Member</h2>
 
         <form action="/search" method="POST">
@@ -151,6 +174,8 @@
 
         <hr>
 
+        <!-- COLLECT PAYMENT -->
+
         <h2>Collect Payment</h2>
 
         <form action="/collect" method="POST">
@@ -168,23 +193,26 @@
             <button class="orange" type="submit">
 
                 COLLECT MONEY
-<hr>
-
-<h2>View All Members</h2>
-
-<a href="/members">
-
-    <button style="background:black;">
-
-        VIEW MEMBERS
-
-    </button>
-
-</a>
 
             </button>
 
         </form>
+
+        <hr>
+
+        <!-- VIEW MEMBERS -->
+
+        <h2>View All Members</h2>
+
+        <a href="/members">
+
+            <button class="black">
+
+                VIEW MEMBERS
+
+            </button>
+
+        </a>
 
     </div>
 
