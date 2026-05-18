@@ -1,324 +1,91 @@
-<!DOCTYPE h<!DOCTYPE html>
+<!-- ADD FORM -->
 
-<html>
+<div id="addForm" class="form-box">
 
-<head>
+    <h2>Add Member</h2>
 
-    <title>Chit Fund Management</title>
+    <form action="/add" method="POST">
 
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
+        <input type="text"
+               name="name"
+               placeholder="Member Name"
+               required>
 
-    <style>
+        <input type="text"
+               name="phone"
+               placeholder="Phone Number"
+               required>
 
-        body{
+        <input type="number"
+               name="chit_amount"
+               placeholder="Chit Amount"
+               required>
 
-            margin:0;
+        <input type="number"
+               name="chits"
+               placeholder="Number Of Chits"
+               required>
 
-            padding:0;
-
-            font-family:Arial;
-
-            background:#87ceeb;
-
-            text-align:center;
-        }
-
-        h1{
-
-            color:darkblue;
-
-            padding-top:30px;
-
-            font-size:35px;
-        }
-
-        .container{
-
-            max-width:400px;
-
-            margin:auto;
-
-            padding:20px;
-        }
-
-        .menu-button{
-
-            width:100%;
-
-            padding:18px;
-
-            margin-top:20px;
-
-            border:none;
-
-            border-radius:12px;
-
-            font-size:18px;
-
-            font-weight:bold;
-
-            color:white;
-
-            cursor:pointer;
-
-            transition:0.3s;
-        }
-
-        .menu-button:hover{
-
-            transform:scale(1.03);
-        }
-
-        .green{
-
-            background:green;
-        }
-
-        .blue{
-
-            background:blue;
-        }
-
-        .orange{
-
-            background:orange;
-        }
-
-        .black{
-
-            background:black;
-        }
-
-        .form-box{
-
-            display:none;
-
-            background:white;
-
-            padding:20px;
-
-            border-radius:15px;
-
-            margin-top:20px;
-
-            box-shadow:0px 0px 10px gray;
-        }
-
-        input{
-
-            width:95%;
-
-            padding:12px;
-
-            margin-top:10px;
-
-            font-size:16px;
-
-            border-radius:8px;
-
-            border:1px solid gray;
-        }
-
-        .submit-btn{
-
-            width:100%;
-
-            padding:12px;
-
-            margin-top:15px;
-
-            border:none;
-
-            border-radius:8px;
-
-            color:white;
-
-            font-size:16px;
-
-            font-weight:bold;
-
-            cursor:pointer;
-        }
-
-        .bg-design{
-
-            position:fixed;
-
-            width:100%;
-
-            height:100%;
-
-            top:0;
-
-            left:0;
-
-            z-index:-1;
-
-            opacity:0.08;
-
-            background-image:
-            radial-gradient(circle at 20% 20%, white 2%, transparent 3%),
-            radial-gradient(circle at 80% 30%, white 2%, transparent 3%),
-            radial-gradient(circle at 50% 80%, white 2%, transparent 3%);
-        }
-
-    </style>
-
-</head>
-
-<body>
-
-    <div class="bg-design"></div>
-
-    <h1>CHIT FUND MANAGEMENT</h1>
-
-    <div class="container">
-
-        <!-- ADD MEMBER BUTTON -->
-
-        <button class="menu-button green"
-                onclick="showForm('addForm')">
+        <button class="submit-btn green"
+                type="submit">
 
             ADD MEMBER
 
         </button>
 
-        <!-- SEARCH BUTTON -->
+    </form>
 
-        <button class="menu-button blue"
-                onclick="showForm('searchForm')">
+</div>
+
+<!-- SEARCH FORM -->
+
+<div id="searchForm" class="form-box">
+
+    <h2>Search Member</h2>
+
+    <form action="/search" method="POST">
+
+        <input type="text"
+               name="phone"
+               placeholder="Enter Phone Number"
+               required>
+
+        <button class="submit-btn blue"
+                type="submit">
 
             SEARCH MEMBER
 
         </button>
 
-        <!-- COLLECT MONEY BUTTON -->
+    </form>
 
-        <button class="menu-button orange"
-                onclick="showForm('collectForm')">
+</div>
+
+<!-- COLLECT FORM -->
+
+<div id="collectForm" class="form-box">
+
+    <h2>Collect Payment</h2>
+
+    <form action="/collect" method="POST">
+
+        <input type="text"
+               name="phone"
+               placeholder="Phone Number"
+               required>
+
+        <input type="number"
+               name="amount"
+               placeholder="Amount Collected"
+               required>
+
+        <button class="submit-btn orange"
+                type="submit">
 
             COLLECT MONEY
 
         </button>
 
-        <!-- VIEW MEMBERS BUTTON -->
+    </form>
 
-        <a href="/members">
-
-            <button class="menu-button black">
-
-                VIEW ALL MEMBERS
-
-            </button>
-
-        </a>
-
-        <!-- ADD MEMBER FORM -->
-
-        <div id="addForm" class="form-box">
-
-            <h2>Add Member</h2>
-
-            <form action="/add" method="POST">
-
-                <input type="text"
-                       name="name"
-                       placeholder="Member Name"
-                       required>
-
-                <input type="text"
-                       name="phone"
-                       placeholder="Phone Number"
-                       required>
-
-                <input type="number"
-                       name="chits"
-                       placeholder="Number Of Chits"
-                       required>
-
-                <button class="submit-btn green"
-                        type="submit">
-
-                    ADD MEMBER
-
-                </button>
-
-            </form>
-
-        </div>
-
-        <!-- SEARCH FORM -->
-
-        <div id="searchForm" class="form-box">
-
-            <h2>Search Member</h2>
-
-            <form action="/search" method="POST">
-
-                <input type="text"
-                       name="name"
-                       placeholder="Enter Member Name"
-                       required>
-
-                <button class="submit-btn blue"
-                        type="submit">
-
-                    SEARCH MEMBER
-
-                </button>
-
-            </form>
-
-        </div>
-
-        <!-- COLLECT FORM -->
-
-        <div id="collectForm" class="form-box">
-
-            <h2>Collect Payment</h2>
-
-            <form action="/collect" method="POST">
-
-                <input type="text"
-                       name="name"
-                       placeholder="Member Name"
-                       required>
-
-                <input type="number"
-                       name="paid_chits"
-                       placeholder="How Many Chits Paid?"
-                       required>
-
-                <button class="submit-btn orange"
-                        type="submit">
-
-                    COLLECT MONEY
-
-                </button>
-
-            </form>
-
-        </div>
-
-    </div>
-
-    <script>
-
-        function showForm(formId){
-
-            let forms = document.getElementsByClassName("form-box");
-
-            for(let i=0;i<forms.length;i++){
-
-                forms[i].style.display = "none";
-            }
-
-            document.getElementById(formId).style.display = "block";
-        }
-
-    </script>
-
-</body>
-
-</html>
+</div>

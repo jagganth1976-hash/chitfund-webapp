@@ -4,7 +4,7 @@ import sqlite3
 app = Flask(__name__)
 
 # =========================
-# DATABASE SETUP
+# DATABASE
 # =========================
 
 conn = sqlite3.connect("members.db", check_same_thread=False)
@@ -12,30 +12,49 @@ conn = sqlite3.connect("members.db", check_same_thread=False)
 cursor = conn.cursor()
 
 cursor.execute("""
+
 CREATE TABLE IF NOT EXISTS members (
 
     id INTEGER PRIMARY KEY AUTOINCREMENT,
 
     name TEXT,
+
     phone TEXT,
+
+    chit_amount INTEGER,
 
     chits INTEGER,
 
     monthly_payment INTEGER,
 
-    total_amount INTEGER,
+    total_paid INTEGER
 
-    total_paid INTEGER,
-
-    months_paid INTEGER,
-
-    remaining_months INTEGER,
-
-    payment_status TEXT
 )
+
 """)
 
 conn.commit()
+
+# =========================
+# MONTHLY PAYMENT RULES
+# =========================
+
+def get_monthly_value(chit_amount):
+
+    if chit_amount == 60000:
+        return 2000
+
+    elif chit_amount == 150000:
+        return 5000
+
+    elif chit_amount == 300000:
+        return 10000
+
+    elif chit_amount == 600000:
+        return 20000
+
+    else:
+        return 0
 
 # =========================
 # HOME PAGE
@@ -59,12 +78,13 @@ def add_member():
 
         phone = request.form["phone"]
 
+        chit_amount = int(request.form["chit_amount"])
+
         chits = int(request.form["chits"])
 
-        # FINAL LOGIC
-        monthly_payment = 2000 * chits
+        monthly_per_chit = get_monthly_value(chit_amount)
 
-        total_amount = 60000
+        total_monthly = monthly_per_chit * chits
 
         cursor.execute("""
 
@@ -72,17 +92,14 @@ def add_member():
 
             name,
             phone,
+            chit_amount,
             chits,
             monthly_payment,
-            total_amount,
-            total_paid,
-            months_paid,
-            remaining_months,
-            payment_status
+            total_paid
 
         )
 
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        VALUES (?, ?, ?, ?, ?, ?)
 
         """,
 
@@ -90,13 +107,10 @@ def add_member():
 
             name,
             phone,
+            chit_amount,
             chits,
-            monthly_payment,
-            total_amount,
-            0,
-            0,
-            30,
-            "NOT PAID"
+            total_monthly,
+            0
 
         ))
 
@@ -104,19 +118,23 @@ def add_member():
 
         return f"""
 
-        <h2>{name} Added Successfully!</h2>
+        <h2>Member Added Successfully</h2>
+
+        Name: {name}<br><br>
+
+        Phone: {phone}<br><br>
+
+        Chit Amount: ₹{chit_amount}<br><br>
 
         Number Of Chits: {chits}<br><br>
 
-        Monthly Payment: ₹{monthly_payment}<br><br>
-
-        Total Amount: ₹{total_amount}
+        Monthly Payment: ₹{total_monthly}
 
         """
 
     except Exception as e:
 
-        return f"Error Adding Member: {e}"
+        return f"Error: {e}"
 
 # =========================
 # SEARCH MEMBER
@@ -127,42 +145,54 @@ def search_member():
 
     try:
 
-        name = request.form["name"].lower()
+        phone = request.form["phone"]
 
         cursor.execute(
 
-            "SELECT * FROM members WHERE lower(name)=?",
+            "SELECT * FROM members WHERE phone=?",
 
-            (name,)
+            (phone,)
         )
 
-        member = cursor.fetchone()
+        members = cursor.fetchall()
 
-        if member:
+        if members:
 
-            return f"""
+            output = "<h1>Member Details</h1>"
 
-            <h2>Member Details</h2>
+            total_monthly = 0
 
-            Name: {member[1]}<br><br>
+            for member in members:
 
-            Phone: {member[2]}<br><br>
+                total_monthly += member[5]
 
-            Number Of Chits: {member[3]}<br><br>
+                output += f"""
 
-            Monthly Payment: ₹{member[4]}<br><br>
+                <hr>
 
-            Total Amount: ₹{member[5]}<br><br>
+                Name: {member[1]}<br><br>
 
-            Total Paid: ₹{member[6]}<br><br>
+                Phone: {member[2]}<br><br>
 
-            Months Paid: {member[7]}<br><br>
+                Chit Amount: ₹{member[3]}<br><br>
 
-            Remaining Months: {member[8]}<br><br>
+                Number Of Chits: {member[4]}<br><br>
 
-            Payment Status: {member[9]}
+                Monthly Payment: ₹{member[5]}<br><br>
+
+                Total Paid: ₹{member[6]}<br><br>
+
+                """
+
+            output += f"""
+
+            <hr>
+
+            <h2>Total Monthly Payment: ₹{total_monthly}</h2>
 
             """
+
+            return output
 
         else:
 
@@ -181,51 +211,31 @@ def collect_payment():
 
     try:
 
-        name = request.form["name"].lower()
+        phone = request.form["phone"]
 
-        paid_chits = int(request.form["paid_chits"])
+        amount = int(request.form["amount"])
 
         cursor.execute(
 
-            "SELECT * FROM members WHERE lower(name)=?",
+            "SELECT * FROM members WHERE phone=?",
 
-            (name,)
+            (phone,)
         )
 
-        member = cursor.fetchone()
+        members = cursor.fetchall()
 
-        if member:
+        if members:
 
-            amount_paid = paid_chits * 2000
+            for member in members:
 
-            total_paid = member[6] + amount_paid
+                new_total = member[6] + amount
 
-            months_paid = member[7] + 1
+                cursor.execute(
 
-            remaining = member[8] - 1
+                    "UPDATE members SET total_paid=? WHERE id=?",
 
-            cursor.execute("""
-
-            UPDATE members
-
-            SET total_paid=?,
-                months_paid=?,
-                remaining_months=?,
-                payment_status=?
-
-            WHERE lower(name)=?
-
-            """,
-
-            (
-
-                total_paid,
-                months_paid,
-                remaining,
-                "PAID",
-                name
-
-            ))
+                    (new_total, member[0])
+                )
 
             conn.commit()
 
@@ -233,15 +243,9 @@ def collect_payment():
 
             <h2>Payment Collected Successfully</h2>
 
-            Member: {member[1]}<br><br>
+            Phone Number: {phone}<br><br>
 
-            Paid Chits: {paid_chits}<br><br>
-
-            Amount Paid: ₹{amount_paid}<br><br>
-
-            Total Paid: ₹{total_paid}<br><br>
-
-            Remaining Months: {remaining}
+            Amount Collected: ₹{amount}
 
             """
 
@@ -264,11 +268,7 @@ def view_members():
 
     members = cursor.fetchall()
 
-    output = """
-
-    <h1>ALL MEMBERS</h1>
-
-    """
+    output = "<h1>ALL MEMBERS</h1>"
 
     for member in members:
 
@@ -280,19 +280,13 @@ def view_members():
 
         Phone: {member[2]}<br><br>
 
-        Number Of Chits: {member[3]}<br><br>
+        Chit Amount: ₹{member[3]}<br><br>
 
-        Monthly Payment: ₹{member[4]}<br><br>
+        Number Of Chits: {member[4]}<br><br>
 
-        Total Amount: ₹{member[5]}<br><br>
+        Monthly Payment: ₹{member[5]}<br><br>
 
         Total Paid: ₹{member[6]}<br><br>
-
-        Months Paid: {member[7]}<br><br>
-
-        Remaining Months: {member[8]}<br><br>
-
-        Payment Status: {member[9]}<br><br>
 
         """
 
