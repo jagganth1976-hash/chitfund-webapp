@@ -1,8 +1,9 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect, session
 import sqlite3
 import pandas as pd
 
 app = Flask(__name__)
+app.secret_key = "chitfundsecret"
 
 # =========================
 # DATABASE
@@ -37,7 +38,7 @@ CREATE TABLE IF NOT EXISTS members (
 conn.commit()
 
 # =========================
-# MONTHLY RULES
+# MONTHLY PAYMENT RULES
 # =========================
 
 def get_monthly_value(chit_amount):
@@ -56,6 +57,103 @@ def get_monthly_value(chit_amount):
 
     else:
         return 0
+    
+# =========================
+# LOGIN
+# =========================
+
+PASSWORD = "Karthi@2009"
+
+@app.route("/login", methods=["GET", "POST"])
+def login():
+
+    if request.method == "POST":
+
+        password = request.form["password"]
+
+        if password == PASSWORD:
+
+            session["logged_in"] = True
+
+            return redirect("/")
+
+        else:
+
+            return """
+
+            <h2>Wrong Password</h2>
+
+            <a href="/login">Try Again</a>
+
+            """
+
+    return """
+
+    <style>
+
+    body{
+
+        font-family:Arial;
+        background:#dff6ff;
+        text-align:center;
+        padding-top:100px;
+    }
+
+    .box{
+
+        background:white;
+        width:300px;
+        margin:auto;
+        padding:30px;
+        border-radius:15px;
+        box-shadow:0px 0px 10px gray;
+    }
+
+    input{
+
+        width:90%;
+        padding:12px;
+        margin-top:15px;
+        border-radius:8px;
+        border:1px solid gray;
+    }
+
+    button{
+
+        width:100%;
+        padding:12px;
+        margin-top:15px;
+        background:blue;
+        color:white;
+        border:none;
+        border-radius:8px;
+        font-size:16px;
+    }
+
+    </style>
+
+    <div class="box">
+
+    <h2>CHIT FUND LOGIN</h2>
+
+    <form method="POST">
+
+    <input type="password"
+           name="password"
+           placeholder="Enter Password"
+           required>
+
+    <button type="submit">
+
+    LOGIN
+
+    </button>
+
+    </form>
+
+    </div>
+
+    """    
 
 # =========================
 # HOME PAGE
@@ -63,6 +161,10 @@ def get_monthly_value(chit_amount):
 
 @app.route("/")
 def home():
+
+    if not session.get("logged_in"):
+
+        return redirect("/login")
 
     return render_template("index.html")
 
@@ -121,9 +223,7 @@ def add_member():
 
         <h2>{name} Added Successfully!</h2>
 
-        Monthly Payment: ₹{total_monthly}<br><br>
-
-        Chit Amount: ₹{chit_amount}
+        Monthly Payment: ₹{total_monthly}
 
         """
 
@@ -160,22 +260,16 @@ def search_member():
             body{
 
                 font-family:Arial;
-
                 background:#dff6ff;
-
                 padding:20px;
             }
 
             .box{
 
                 background:white;
-
                 padding:20px;
-
                 border-radius:15px;
-
                 margin-bottom:20px;
-
                 box-shadow:0px 0px 10px gray;
             }
 
@@ -195,17 +289,17 @@ def search_member():
 
                 <div class="box">
 
-                Name: {member[1]}<br><br>
+                <b>Name:</b> {member[1]}<br><br>
 
-                Phone: {member[2]}<br><br>
+                <b>Phone:</b> {member[2]}<br><br>
 
-                Chit Amount: ₹{member[3]}<br><br>
+                <b>Chit Amount:</b> ₹{member[3]}<br><br>
 
-                Number Of Chits: {member[4]}<br><br>
+                <b>Number Of Chits:</b> {member[4]}<br><br>
 
-                Monthly Payment: ₹{member[5]}<br><br>
+                <b>Monthly Payment:</b> ₹{member[5]}<br><br>
 
-                Total Paid: ₹{member[6]}
+                <b>Total Paid:</b> ₹{member[6]}
 
                 </div>
 
@@ -297,22 +391,16 @@ def view_members():
     body{
 
         font-family:Arial;
-
         background:#dff6ff;
-
         padding:20px;
     }
 
     .box{
 
         background:white;
-
         padding:20px;
-
         border-radius:15px;
-
         margin-bottom:20px;
-
         box-shadow:0px 0px 10px gray;
     }
 
@@ -328,29 +416,23 @@ def view_members():
 
         <div class="box">
 
-        Name: {member[1]}<br><br>
+        <b>Name:</b> {member[1]}<br><br>
 
-        Phone: {member[2]}<br><br>
+        <b>Phone:</b> {member[2]}<br><br>
 
-        Chit Amount: ₹{member[3]}<br><br>
+        <b>Chit Amount:</b> ₹{member[3]}<br><br>
 
-        Number Of Chits: {member[4]}<br><br>
+        <b>Number Of Chits:</b> {member[4]}<br><br>
 
-        Monthly Payment: ₹{member[5]}<br><br>
+        <b>Monthly Payment:</b> ₹{member[5]}<br><br>
 
-        Total Paid: ₹{member[6]}
+        <b>Total Paid:</b> ₹{member[6]}
 
         </div>
 
         """
 
     return output
-
-# =========================
-# RUN APP
-# =========================
-
- if __name__ == "__main__":
 
 # =========================
 # IMPORT EXCEL
@@ -413,6 +495,12 @@ def upload_excel():
 
     except Exception as e:
 
-        return f"Upload Error: {e}"    
+        return f"Upload Error: {e}"
 
-    app.run(host="0.0.0.0", port=5000)
+# =========================
+# RUN APP
+# =========================
+
+if __name__ == "__main__":
+
+    app.run(host="0.0.0.0", port=5000, debug=True)
