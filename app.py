@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS members (
 conn.commit()
 
 # =========================
-# MONTHLY PAYMENT RULES
+# MONTHLY RULES
 # =========================
 
 def get_monthly_value(chit_amount):
@@ -118,17 +118,11 @@ def add_member():
 
         return f"""
 
-        <h2>Member Added Successfully</h2>
+        <h2>{name} Added Successfully!</h2>
 
-        Name: {name}<br><br>
+        Monthly Payment: ₹{total_monthly}<br><br>
 
-        Phone: {phone}<br><br>
-
-        Chit Amount: ₹{chit_amount}<br><br>
-
-        Number Of Chits: {chits}<br><br>
-
-        Monthly Payment: ₹{total_monthly}
+        Chit Amount: ₹{chit_amount}
 
         """
 
@@ -158,7 +152,37 @@ def search_member():
 
         if members:
 
-            output = "<h1>Member Details</h1>"
+            output = """
+
+            <style>
+
+            body{
+
+                font-family:Arial;
+
+                background:#dff6ff;
+
+                padding:20px;
+            }
+
+            .box{
+
+                background:white;
+
+                padding:20px;
+
+                border-radius:15px;
+
+                margin-bottom:20px;
+
+                box-shadow:0px 0px 10px gray;
+            }
+
+            </style>
+
+            <h1>Member Details</h1>
+
+            """
 
             total_monthly = 0
 
@@ -168,7 +192,7 @@ def search_member():
 
                 output += f"""
 
-                <hr>
+                <div class="box">
 
                 Name: {member[1]}<br><br>
 
@@ -180,13 +204,13 @@ def search_member():
 
                 Monthly Payment: ₹{member[5]}<br><br>
 
-                Total Paid: ₹{member[6]}<br><br>
+                Total Paid: ₹{member[6]}
+
+                </div>
 
                 """
 
             output += f"""
-
-            <hr>
 
             <h2>Total Monthly Payment: ₹{total_monthly}</h2>
 
@@ -203,7 +227,7 @@ def search_member():
         return f"Search Error: {e}"
 
 # =========================
-# COLLECT PAYMENT
+# COLLECT MONEY
 # =========================
 
 @app.route("/collect", methods=["POST"])
@@ -235,17 +259,14 @@ def collect_payment():
                     "UPDATE members SET total_paid=? WHERE id=?",
 
                     (new_total, member[0])
+
                 )
 
             conn.commit()
 
             return f"""
 
-            <h2>Payment Collected Successfully</h2>
-
-            Phone Number: {phone}<br><br>
-
-            Amount Collected: ₹{amount}
+            <h2>₹{amount} Collected Successfully</h2>
 
             """
 
@@ -268,13 +289,43 @@ def view_members():
 
     members = cursor.fetchall()
 
-    output = "<h1>ALL MEMBERS</h1>"
+    output = """
+
+    <style>
+
+    body{
+
+        font-family:Arial;
+
+        background:#dff6ff;
+
+        padding:20px;
+    }
+
+    .box{
+
+        background:white;
+
+        padding:20px;
+
+        border-radius:15px;
+
+        margin-bottom:20px;
+
+        box-shadow:0px 0px 10px gray;
+    }
+
+    </style>
+
+    <h1>ALL MEMBERS</h1>
+
+    """
 
     for member in members:
 
         output += f"""
 
-        <hr>
+        <div class="box">
 
         Name: {member[1]}<br><br>
 
@@ -286,7 +337,9 @@ def view_members():
 
         Monthly Payment: ₹{member[5]}<br><br>
 
-        Total Paid: ₹{member[6]}<br><br>
+        Total Paid: ₹{member[6]}
+
+        </div>
 
         """
 
