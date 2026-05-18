@@ -14,52 +14,36 @@
         body{
 
             margin:0;
-
             padding:0;
-
             font-family:Arial;
-
             background:#dff6ff;
-
             text-align:center;
         }
 
         h1{
 
             color:darkblue;
-
             padding-top:20px;
-
             font-size:38px;
         }
 
         .container{
 
             max-width:420px;
-
             margin:auto;
-
             padding:20px;
         }
 
         .menu-button{
 
             width:100%;
-
             padding:16px;
-
-            margin-top:20px;
-
+            margin-top:15px;
             border:none;
-
             border-radius:12px;
-
             font-size:18px;
-
             font-weight:bold;
-
             color:white;
-
             cursor:pointer;
         }
 
@@ -83,54 +67,41 @@
             background:black;
         }
 
+        .purple{
+
+            background:purple;
+        }
+
         .form-box{
 
             display:none;
-
             background:white;
-
             padding:20px;
-
             border-radius:15px;
-
             margin-top:20px;
-
             box-shadow:0px 0px 10px gray;
         }
 
         input{
 
             width:95%;
-
             padding:12px;
-
             margin-top:10px;
-
             font-size:16px;
-
             border-radius:8px;
-
             border:1px solid gray;
         }
 
         .submit-btn{
 
             width:100%;
-
             padding:12px;
-
             margin-top:15px;
-
             border:none;
-
             border-radius:8px;
-
             color:white;
-
             font-size:16px;
-
             font-weight:bold;
-
             cursor:pointer;
         }
 
@@ -148,6 +119,8 @@
     <h1>CHIT FUND MANAGEMENT</h1>
 
     <div class="container">
+
+        <!-- MENU BUTTONS -->
 
         <button class="menu-button green"
                 onclick="showForm('addForm')">
@@ -180,7 +153,14 @@
 
         </a>
 
-        <!-- ADD FORM -->
+        <button class="menu-button purple"
+                onclick="showForm('uploadForm')">
+
+            UPLOAD EXCEL
+
+        </button>
+
+        <!-- ADD MEMBER FORM -->
 
         <div id="addForm" class="form-box">
 
@@ -219,7 +199,7 @@
 
         </div>
 
-        <!-- SEARCH FORM -->
+        <!-- SEARCH MEMBER FORM -->
 
         <div id="searchForm" class="form-box">
 
@@ -243,7 +223,7 @@
 
         </div>
 
-        <!-- COLLECT FORM -->
+        <!-- COLLECT PAYMENT FORM -->
 
         <div id="collectForm" class="form-box">
 
@@ -272,6 +252,31 @@
 
         </div>
 
+        <!-- UPLOAD EXCEL FORM -->
+
+        <div id="uploadForm" class="form-box">
+
+            <h2>Upload Excel File</h2>
+
+            <form action="/upload"
+                  method="POST"
+                  enctype="multipart/form-data">
+
+                <input type="file"
+                       name="file"
+                       required>
+
+                <button class="submit-btn purple"
+                        type="submit">
+
+                    UPLOAD EXCEL
+
+                </button>
+
+            </form>
+
+        </div>
+
     </div>
 
     <script>
@@ -280,7 +285,7 @@
 
             let forms = document.getElementsByClassName("form-box");
 
-            for(let i=0;i<forms.length;i++){
+            for(let i=0; i<forms.length; i++){
 
                 forms[i].style.display = "none";
             }
@@ -293,4 +298,3 @@
 </body>
 
 </html>
-</div>

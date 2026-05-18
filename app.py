@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request
 import sqlite3
+import pandas as pd
 
 app = Flask(__name__)
 
@@ -349,6 +350,69 @@ def view_members():
 # RUN APP
 # =========================
 
-if __name__ == "__main__":
+ if __name__ == "__main__":
+
+# =========================
+# IMPORT EXCEL
+# =========================
+
+@app.route("/upload", methods=["POST"])
+def upload_excel():
+
+    try:
+
+        file = request.files["file"]
+
+        df = pd.read_excel(file)
+
+        for index, row in df.iterrows():
+
+            name = row["name"]
+
+            phone = str(row["phone"])
+
+            chit_amount = int(row["chit_amount"])
+
+            chits = int(row["chits"])
+
+            monthly_per_chit = get_monthly_value(chit_amount)
+
+            total_monthly = monthly_per_chit * chits
+
+            cursor.execute("""
+
+            INSERT INTO members (
+
+                name,
+                phone,
+                chit_amount,
+                chits,
+                monthly_payment,
+                total_paid
+
+            )
+
+            VALUES (?, ?, ?, ?, ?, ?)
+
+            """,
+
+            (
+
+                name,
+                phone,
+                chit_amount,
+                chits,
+                total_monthly,
+                0
+
+            ))
+
+        conn.commit()
+
+        return "<h2>Excel Uploaded Successfully!</h2>"
+
+    except Exception as e:
+
+        return f"Upload Error: {e}"    
 
     app.run(host="0.0.0.0", port=5000)
